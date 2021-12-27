@@ -38,6 +38,14 @@ def gameover():
                             x != 0 and x != 4)):
                         display.set_pixel(x, y, light)
         time.sleep(0.05)
+    time.sleep(1)
+    for light in range(9, -1, -1):
+        for x in range(0, 5):
+            for y in range(0, 5):
+                old_light = display.get_pixel(x, y)
+                if (old_light != 0):
+                    display.set_pixel(x, y, light)
+        time.sleep(0.05)
 
 while game_running:
 
