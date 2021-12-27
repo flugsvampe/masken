@@ -8,6 +8,8 @@ direction_x = 1
 direction_y = 0
 apple_x = None
 apple_y = None
+round = 0
+shut_of_pixel = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 def apple_ny_position():
     ny_x = random.randint(0, 4)
@@ -18,6 +20,8 @@ def apple_ny_position():
 
 while True:
 
+    round = round + 1
+
     if (apple_x is None or apple_y is None):
         pos = apple_ny_position()
         apple_x = pos[0]
@@ -26,7 +30,11 @@ while True:
     a_presses = button_a.get_presses()
     b_presses = button_b.get_presses()
 
-    display.set_pixel(mask_x, mask_y, 0)
+    for x in range(0, 5):
+        for y in range(0, 5):
+            if (shut_of_pixel[y * 5 + x] == round):
+                display.set_pixel(x, y, 0)
+
     mask_x = mask_x + direction_x
     mask_y = mask_y + direction_y
 
@@ -47,8 +55,9 @@ while True:
         mask_y = 4
 
     display.set_pixel(mask_x, mask_y, 9)
+    shut_of_pixel[mask_y * 5 + mask_x] = round + 3
 
-    for light in range(1, 9):
+    for light in range(1, 10):
         if (apple_x is not None and apple_y is not None):
             display.set_pixel(apple_x, apple_y, light)
         time.sleep(0.025)
