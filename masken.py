@@ -34,8 +34,8 @@ def gameover():
                     display.set_pixel(x, y, light)
                 else:
                     if (y == 0 or (y == 1 and x != 1 and x != 3) or y == 2 or
-                        (y == 3 and (x == 0 or x == 4)) or (y == 4 and
-                            x != 0 and x != 4)):
+                        (y == 3 and (x == 0 or x == 4)) or
+                            (y == 4 and x != 0 and x != 4)):
                         display.set_pixel(x, y, light)
         time.sleep(0.05)
     time.sleep(1)
@@ -73,6 +73,9 @@ while game_running:
         apple_x = None
         apple_y = None
         mask_length = mask_length + 1
+        for pixel in range(0, 25):
+            if (shut_of_pixel[pixel] > round):
+                shut_of_pixel[pixel] = shut_of_pixel[pixel] + 1
 
     if (mask_x >= 5):
         gameover()
