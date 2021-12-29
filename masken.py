@@ -14,7 +14,6 @@ shut_of_pixel = \
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 mask_length = 1
 
-
 def apple_ny_position():
     ny_x = mask_x
     ny_y = mask_y
@@ -23,8 +22,27 @@ def apple_ny_position():
         ny_y = random.randint(0, 4)
     return [ny_x, ny_y]
 
+def start_countdown():
+    for nr in range(3, -1, -1):
+        display.show(nr)
+        if (nr == 0):
+            time.sleep(0.2)
+            display.clear()
+        else:
+            time.sleep(1)
+
 def gameover():
     global game_running
+    global mask_x
+    global mask_y
+    global direction_x
+    global direction_y
+    global apple_x
+    global apple_y
+    global round
+    global shut_of_pixel
+    global mask_length
+
     game_running = False
     for light in range(9, -1, -1):
         for x in range(0, 5):
@@ -46,7 +64,22 @@ def gameover():
                     display.set_pixel(x, y, light)
         time.sleep(0.05)
 
-while game_running:
+    mask_x = 0
+    mask_y = 2
+    direction_x = 1
+    direction_y = 0
+    apple_x = None
+    apple_y = None
+    round = 0
+    shut_of_pixel = \
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    mask_length = 1
+
+
+while True:
+    game_running = True
+    if (round == 0):
+        start_countdown()
 
     round = round + 1
 
@@ -78,19 +111,15 @@ while game_running:
 
     if (mask_x >= 5):
         gameover()
-        mask_x = 0
 
     if (game_running and mask_x < 0):
         gameover()
-        mask_x = 4
 
     if (game_running and mask_y >= 5):
         gameover()
-        mask_y = 0
 
     if (game_running and mask_y < 0):
         gameover()
-        mask_y = 4
 
     if (game_running and display.get_pixel(mask_x, mask_y) != 0):
         gameover()
@@ -135,4 +164,3 @@ while game_running:
                 else:
                     direction_x = 1
                 direction_y = 0
-
