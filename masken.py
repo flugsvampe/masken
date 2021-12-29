@@ -16,12 +16,11 @@ mask_length = 1
 
 
 def apple_ny_position():
-    ny_x = random.randint(0, 4)
-    ny_y = random.randint(0, 4)
-    if (ny_x == mask_x or ny_y == mask_y):
-        return apple_ny_position()
-    if (display.get_pixel(ny_x, ny_y) != 0):
-        return apple_ny_position()
+    ny_x = mask_x
+    ny_y = mask_y
+    while (ny_x == mask_x or ny_y == mask_y or display.get_pixel(ny_x, ny_y) != 0):
+        ny_x = random.randint(0, 4)
+        ny_y = random.randint(0, 4)
     return [ny_x, ny_y]
 
 def gameover():
