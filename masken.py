@@ -2,7 +2,6 @@ from microbit import *
 import time
 import random
 
-game_running = True
 mask_x = 0
 mask_y = 2
 direction_x = 1
@@ -22,64 +21,24 @@ def apple_ny_position():
         ny_y = random.randint(0, 4)
     return [ny_x, ny_y]
 
-def start_countdown():
-    for nr in range(3, -1, -1):
-        display.show(nr)
-        if (nr == 0):
-            time.sleep(0.2)
-            display.clear()
-        else:
-            time.sleep(1)
-
-def gameover():
-    global game_running
-    global mask_x
-    global mask_y
-    global direction_x
-    global direction_y
-    global apple_x
-    global apple_y
-    global round
-    global shut_of_pixel
-    global mask_length
-
-    game_running = False
-    for light in range(9, -1, -1):
-        for x in range(0, 5):
-            for y in range(0, 5):
-                if (light == 9):
-                    display.set_pixel(x, y, light)
-                else:
-                    if (y == 0 or (y == 1 and x != 1 and x != 3) or y == 2 or
-                        (y == 3 and (x == 0 or x == 4)) or
-                            (y == 4 and x != 0 and x != 4)):
-                        display.set_pixel(x, y, light)
-        time.sleep(0.05)
-    time.sleep(1)
-    for light in range(9, -1, -1):
-        for x in range(0, 5):
-            for y in range(0, 5):
-                old_light = display.get_pixel(x, y)
-                if (old_light != 0):
-                    display.set_pixel(x, y, light)
-        time.sleep(0.05)
-
-    mask_x = 0
-    mask_y = 2
-    direction_x = 1
-    direction_y = 0
-    apple_x = None
-    apple_y = None
-    round = 0
-    shut_of_pixel = \
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    mask_length = 1
-
-
 while True:
-    game_running = True
     if (round == 0):
-        start_countdown()
+        for nr in range(3, -1, -1):
+            display.show(nr)
+            if (nr == 0):
+                time.sleep(0.2)
+                display.clear()
+            else:
+                time.sleep(1)
+        direction_x = 1
+        direction_y = 0
+        mask_x = 0
+        mask_y = 2
+        apple_x = None
+        apple_y = None
+        shut_of_pixel = \
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        mask_length = 1
 
     round = round + 1
 
@@ -88,6 +47,9 @@ while True:
         apple_x = pos[0]
         apple_y = pos[1]
 
+    # Vet inte varför jag måste gör det här två gånger, men det funkar inte annars.
+    a_presses = button_a.get_presses()
+    b_presses = button_b.get_presses()
     a_presses = button_a.get_presses()
     b_presses = button_b.get_presses()
 
@@ -109,22 +71,31 @@ while True:
             if (shut_of_pixel[pixel] > round):
                 shut_of_pixel[pixel] = shut_of_pixel[pixel] + 1
 
-    if (mask_x >= 5):
-        gameover()
+    if (mask_x >= 5 or mask_x < 0 or mask_y >= 5
+            or mask_y < 0 or display.get_pixel(mask_x, mask_y) != 0):
+        for light in range(9, -1, -1):
+            for x in range(0, 5):
+                for y in range(0, 5):
+                    if (light == 9):
+                        display.set_pixel(x, y, light)
+                    else:
+                        if (y == 0 or (y == 1 and x != 1 and x != 3) or y == 2 or
+                            (y == 3 and (x == 0 or x == 4)) or
+                                (y == 4 and x != 0 and x != 4)):
+                            display.set_pixel(x, y, light)
+            time.sleep(0.05)
+        time.sleep(1)
+        for light in range(9, -1, -1):
+            for x in range(0, 5):
+                for y in range(0, 5):
+                    old_light = display.get_pixel(x, y)
+                    if (old_light != 0):
+                        display.set_pixel(x, y, light)
+            time.sleep(0.05)
 
-    if (game_running and mask_x < 0):
-        gameover()
+        round = 0
 
-    if (game_running and mask_y >= 5):
-        gameover()
-
-    if (game_running and mask_y < 0):
-        gameover()
-
-    if (game_running and display.get_pixel(mask_x, mask_y) != 0):
-        gameover()
-
-    if (game_running):
+    else:
         display.set_pixel(mask_x, mask_y, 9)
         shut_of_pixel[mask_y * 5 + mask_x] = round + mask_length
 
