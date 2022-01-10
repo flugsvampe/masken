@@ -47,9 +47,6 @@ while True:
         apple_x = pos[0]
         apple_y = pos[1]
 
-    # Vet inte varför jag måste gör det här två gånger, men det funkar inte annars.
-    a_presses = button_a.get_presses()
-    b_presses = button_b.get_presses()
     a_presses = button_a.get_presses()
     b_presses = button_b.get_presses()
 
